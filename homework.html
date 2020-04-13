@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: "微軟正黑體"
+        }
+
+        body {
+            background-image: url(./images/background.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+        }
+
+        #game {
+            display: inline-block;
+            margin-left: 15%;
+            margin-top: 2%;
+            background-color: rgba(0, 0, 0, 0.5);
+            height: 850px;
+            box-sizing: border-box;
+            border-radius: 2rem;
+            position: relative;
+        }
+
+        #menu {
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 50px;
+            float: right;
+            margin-right: 15%;
+            margin-top: 2%;
+            height: 850px;
+            box-sizing: border-box;
+            border-radius: 2rem;
+            text-align: center;
+        }
+
+        #btn-start {
+            width: 400px;
+            height: 200px;
+            font-size: 80px;
+            background-image: url(./images/btn-start-bg.png);
+            background-size: 400px 200px;
+            font-weight: bolder;
+            color: yellow;
+            border: 0px;
+            text-shadow: 0 0 5px black;
+            position: absolute;
+            left: calc(50% - 200px);
+            top: calc(50% - 100px);
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0);
+            box-sizing: border-box;
+        }
+
+        #btn-start:hover {
+            cursor: pointer;
+        }
+
+        .board {
+            font-size: 40px;
+            color: white;
+            text-shadow: 1px 1px 1px black;
+            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            width: 50px;
+            height: 50px;
+            background-size: 50px 50px;
+            border: 0px;
+            background-color: rgba(0, 0, 0, 0);
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        .btn:hover {
+            cursor: pointer;
+        }
+
+        #btn-pause {
+            background-image: url(./images/pause.png);
+        }
+
+        #btn-play {
+            background-image: url(./images/play.png);
+        }
+
+        #number {
+            position: absolute;
+            left: calc(50% - 150px);
+            top: calc(50% - 150px);
+            z-index: 1;
+            width: 300px;
+            height: 300px;
+            background-image: url(./images/number.gif);
+            background-size: 300px 300px;
+        }
+
+        .hole {
+            width: 250px;
+            height: 250px;
+            background-image: url(./images/swirl.png);
+            background-size: 250px 120px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            vertical-align: top;
+        }
+
+        .out {
+            width: 250px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .good {
+            background-image: url(./images/good.png);
+            background-size: 180px 180px;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            left: calc(50% - 125px);
+            top: 200px;
+            transform-origin: center bottom;
+        }
+
+        .bad {
+            background-image: url(./images/bad.png);
+            background-size: 180px 180px;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            left: calc(50% - 125px);
+            top: 200px;
+            transform-origin: center bottom;
+        }
+
+        .up {
+            animation: up 500ms forwards ease;
+        }
+
+        .down {
+            animation: down 500ms ease-in
+        }
+
+        @keyframes up {
+            0% {
+                top: 200px;
+                background-size: 0px 0px;
+            }
+
+            100% {
+                top: 0px;
+                background-size: 180px 180px;
+            }
+        }
+
+        @keyframes down {
+            0% {
+                top: 0%;
+            }
+
+            100% {
+                top: 200px;
+            }
+        }
+
+        .hit2 {
+            animation: hit2 2s ease-in;
+        }
+
+        @keyframes hit2 {
+            from {
+                top: 0%;
+            }
+
+            50%,
+            to {
+                opacity: 1;
+                top: 200px;
+            }
+
+            25%,
+            75% {
+                opacity: 0;
+            }
+        }
+
+        .hit {
+            animation: hit 2s ease-in;
+        }
+
+        @keyframes hit {
+
+            from {
+                top: 0%;
+            }
+
+            to {
+                top: 200px;
+                transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translate3d(-10px, 0, 0);
+                transform: translate3d(-10px, 0, 0);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translate3d(10px, 0, 0);
+                transform: translate3d(10px, 0, 0);
+            }
+        }
+
+        #table {
+            cursor: url(./images/cursor_black.png) 50 50, auto;
+        }
+
+        #table:active {
+            cursor: url(./images/cursor_white.png) 50 50, auto;
+        }
+
+        span {
+            display: inline-block;
+            width: 30px;
+        }
+
+        #rules {
+            font-size: 40px;
+            color: white;
+        }
+
+        #rules td {
+            width: 150px;
+            height: 150px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #rules td img {
+            width: auto;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game">
+        <input type="button" value="START" id="btn-start">
+        <table align="center" id="table">
+            <tr>
+                <td class="board">
+                    目前分數: <span id="text-score">0</span>
+                </td>
+                <td class="board">
+                    剩餘時間: <span id="text-time">30</span>
+                </td>
+                <td class="board">
+                    <input class="btn" id="btn-pause" type="button">
+                    <input class="btn" id="btn-play" type="button">
+                </td>
+            </tr>
+            <tr>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+                <td class="hole">
+                    <div class="out">
+                        <div class="good img"></div>
+                        <div class="bad img"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="menu">
+        <table id="rules" border="1px" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>出場角色</td>
+                <td>得分</td>
+            </tr>
+            <tr>
+                <td><img src="./images/good.png" alt=""></td>
+                <td>1分</td>
+            </tr>
+            <tr>
+                <td><img src="./images/bad.png" alt=""></td>
+                <td>-1分</td>
+            </tr>
+        </table>
+        <hr style="width: 250px">
+        <div class="board">最高分</div>
+        <div class="board">玩家: <span id="text-highplayer">none</span></div>
+        <div class="board">分數: <span id="text-highscore">0</span></div>
+    </div>
+    <script>
+        const holes = document.getElementsByClassName("hole")
+        const btnStart = document.getElementById("btn-start")
+        const textScore = document.getElementById("text-score")
+        const textTime = document.getElementById("text-time")
+        const good = document.getElementsByClassName("good")
+        const bad = document.getElementsByClassName("bad")
+        const textHighPlayer = document.getElementById("text-highplayer")
+        const textHighScore = document.getElementById("text-highscore")
+        const table = document.getElementById("table")
+        const btnPause = document.getElementById("btn-pause")
+        const btnPlay = document.getElementById("btn-play")
+
+
+        let score = 0;
+        let inGame = false;
+        let timeleft = 30;
+        // 冒出來
+        let timer = 0;
+        // 倒數時間
+        let countdowntime = 0
+        let highscore = { name: "", score: 0 }
+        let storage = JSON.parse(localStorage.getItem("highscore"));
+        if (storage !== null) {
+            highscore.name = storage.name;
+            textHighPlayer.innerText = highscore.name;
+            highscore.score = storage.score;
+            textHighScore.innerText = highscore.score;
+        }
+
+        btnPlay.disabled = true;
+
+        btnStart.onclick = () => {
+            score = 0
+            textScore.innerText = score;
+            timeleft = 30;
+            textTime.innerText = timeleft;
+            btnStart.style.display = "none"
+            btnStart.insertAdjacentHTML("afterend", '<div id="number"></div>')
+            const number = document.getElementById("number")
+            setTimeout(() => {
+                number.remove()
+                inGame = true;
+                // btnStart.disabled = true
+                countdowntime = setInterval(countdown, 1000)
+                timer = setInterval(game, 3000)
+                game()
+            }, 6000)
+        }
+
+        btnPause.onclick = () => {
+            clearInterval(countdowntime);
+            clearInterval(timer);
+            timeleft = timeleft;
+            textTime.innerText = timeleft;
+            btnPlay.disabled = false;
+            for (let i of good) {
+                i.style.animationPlayState = "paused"
+            }
+            for (let i of bad) {
+                i.style.animationPlayState = "paused"
+            }
+        }
+
+        btnPlay.onclick = () => {
+            btnPlay.disabled = true;
+            timeleft = timeleft;
+            textTime.innerText = timeleft;
+            countdowntime = setInterval(countdown, 1000)
+            timer = setInterval(game, 3000)
+            for (let i of good) {
+                i.style.animationPlayState = "running"
+            }
+            for (let i of bad) {
+                i.style.animationPlayState = "running"
+            }
+        }
+
+        const countdown = () => {
+            timeleft--;
+            textTime.innerText = timeleft
+            if (timeleft == 0) {
+                clearInterval(countdowntime);
+                // all.insertAdjacentHTML("beforebegin", '<input type="button" value="RESTART" id="btn-start">');
+                // const btnStart = document.getElementById("btn-start")
+                // btnStart.onclick = () => {
+                //     textTime.style.color = "white"
+                //     textTime.style.fontSize = "40px"
+                //     score = 0
+                //     textScore.innerText = score;
+                //     inGame = true;
+                //     timeleft = 30;
+                //     textTime.innerText = timeleft;
+                //     // btnStart.disabled = true
+                //     countdowntime = setInterval(countdown, 1000)
+                //     timer = setInterval(game, 5000)
+                //     game()
+                //     btnStart.remove()
+                // }
+                btnStart.style.display = ""
+                btnStart.value = "RESTART"
+                btnStart.style.backgroundImage = "url(./images/btn-restart-bg.png)"
+                btnStart.style.fontSize = "70px"
+            }
+        }
+
+        const game = () => {
+            // 被打到重新出來會重製圖片
+            for (let i of good) {
+                i.classList.remove("down")
+                i.classList.remove("hit2")
+                i.style.backgroundImage = "url(./images/good.png)"
+            }
+            for (let i of bad) {
+                i.classList.remove("down")
+                i.classList.remove("hit")
+                i.style.backgroundImage = "url(./images/bad.png)"
+            }
+            // 取隨機兩個不重複的冒出來
+            let ary = []
+            let arygood = []
+            let arybad = []
+            for (let i = 0; i < 9; i++) {
+                ary.push(i)
+            }
+            let rand = (max) => { return Math.floor(Math.random() * max) }
+            // 好的冒出來
+            for (let i = 0; i < 3; i++) {
+                let hole = (rand(9 - i))
+                good[ary[hole]].classList.remove("down");
+                good[ary[hole]].classList.add("up");
+                arygood.push(ary[hole])
+                ary.splice(hole, 1)
+            }
+            // 壞的冒出來
+            for (let i = 0; i < 3; i++) {
+                let hole = (rand(6 - i))
+                bad[ary[hole]].classList.remove("down");
+                bad[ary[hole]].classList.add("up");
+                arybad.push(ary[hole])
+                ary.splice(hole, 1)
+            }
+            let timerend = setTimeout(() => {
+                for (let i of arygood) {
+                    good[i].classList.replace("up", "down")
+                }
+                for (let i of arybad) {
+                    bad[i].classList.replace("up", "down")
+                }
+            }, 2000)
+            if (timeleft == 0) {
+                clearInterval(timer)
+                clearTimeout(timerend)
+                for (let i of good) {
+                    i.classList.remove("up")
+                    i.classList.remove("down")
+                    i.classList.remove("hit2")
+                }
+                for (let i of bad) {
+                    i.classList.remove("up")
+                    i.classList.remove("down")
+                    i.classList.remove("hit")
+                }
+                inGame = false;
+
+                alert(`你得到${score}分`)
+                if (storage == null || score > highscore.score) {
+                    const input = prompt("恭喜最高分，請輸入名字")
+                    if (input !== null && input.trim() !== "") {
+                        // 將輸入的名字與分數輸入變數
+                        highscore.score = score;
+                        highscore.name = input
+                        // 修改最高分文字
+                        textHighPlayer.innerText = highscore.name;
+                        textHighScore.innerText = highscore.score;
+                        // 將最高分變數轉文字後存入 localstorage
+                        localStorage.setItem("highscore", JSON.stringify(highscore))
+                    }
+                }
+                // btnStart.disabled = false
+            }
+        }
+
+        for (let i of good) {
+            i.onclick = () => {
+                if (inGame) {
+                    i.style.backgroundImage = "url(./images/goodhit.png)"
+                    i.classList.replace("up", "hit2")
+                    score++
+                    textScore.innerText = score
+                }
+            }
+        }
+
+        for (let i of bad) {
+            i.onclick = () => {
+                if (inGame) {
+                    i.style.backgroundImage = "url(./images/badhit.png)"
+                    i.classList.replace("up", "hit")
+                    if (score == 0) {
+                        score == score
+                    }
+                    else {
+                        score--
+                    }
+                    textScore.innerText = score
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>
